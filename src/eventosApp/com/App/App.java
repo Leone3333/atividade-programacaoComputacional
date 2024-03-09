@@ -1,19 +1,27 @@
 package eventosApp.com.App  ;
+import java.util.Scanner;
 
+import eventosApp.com.Classes.Evento;
 import eventosApp.com.Classes.Usuario;
 
 public class App {
-
+    
     public static void main(String[] args) throws Exception {
-        Usuario leone = new Usuario("leo", "leone123");
         
+        Evento evento1 = new Evento("Evento de python", "TI", "São paulo", "16:00", "um evento bem legal");
 
-        if (leone.getSenha() == "leo" || leone.getSenha() == "leone123") {
-            System.out.println("Hello, World!");
-            
-        }else{
-            System.out.println("Teste realizado");
+        try {
+            evento1.creatEvento(evento1);
+            System.out.println(evento1.getNomeEvento() + " criado com sucesso");
+        } catch (Exception e) {
+            e.getMessage();
+            System.out.println("Erro ao criar evento");
+            }
         }
-    }
-    public boolean a = true;
+
+        public static void mensagemCadastro(){
+            System.out.println("Bem vindo hora de criar seu cadastro!\n");
+            System.out.println("Digite seu nome:\nCPF:\nsenha: ");
+        }
+
 }
