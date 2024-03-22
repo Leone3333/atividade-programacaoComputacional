@@ -1,0 +1,119 @@
+Levantamento do sistema de eventos em Java - atividade de programação para computadores
+
+Requisitos funcionais:
+
+CONCLUIDO
+1- Desenvolvido em Java, no console
+
+CONCLUIDO
+2- Cadastro e notificação de eventos ocorrendo em Porto Alegre
+
+CONCLUIDO
+3- Cadastro do usuario (minimo 3 atributos)
+
+CONCLUIDO
+4- Atributos do envento: nome, endereço, categoria, horário, descrição
+
+CONCLUIDO
+5- Delimitar categorias
+
+6- Consultar eventos, participar dos eventos, cancelar participação
+
+7- Através do horário, o programa deve ordenar os eventos mais próximos
+e informar se um evento está ocorrendo no momento 
+(é desejável utilizar a estrutura DateTime para o controle de horários); 
+
+8- Informar eventos que já ocorreram
+
+CONCLUIDO
+9- As informações dos eventos devem ser salvas em um arquivo de texto chamado events.data.
+ Toda vez que o programa for aberto, deve carregar os eventos a partir da leitura deste arquivo; 
+
+10- Na estrutura de software do projeto deve constar no mínimo uma classe abstrata 
+e no mínimo 2 métodos virtuais (não necessariamente juntos).
+
+Pesquisas adicionais úteis para o sistema:
+
+Para ordenar os eventos de acordo com a data mais próxima do dia de hoje, você pode seguir estas etapas:
+
+1. Ler os eventos do arquivo:
+
+Utilize o código do exemplo anterior para ler todos os eventos do arquivo para uma lista de objetos Evento.
+2. Obter a data de hoje:
+
+Utilize a classe LocalDate do Java para obter a data de hoje.
+3. Calcular a diferença de dias entre cada evento e a data de hoje:
+
+Para cada evento na lista, calcule a diferença de dias entre a data do evento e a data de hoje usando a classe ChronoUnit.DAYS.
+4. Ordenar a lista de eventos pela diferença de dias:
+
+Utilize o método sort da classe Collections para ordenar a lista de eventos de acordo com a diferença de dias, com os eventos mais próximos do dia de hoje no início da lista.
+5. Exibir os eventos ordenados:
+
+Percorra a lista de eventos ordenados e exiba as informações de cada evento.
+Exemplo de código para ordenar eventos:
+
+Java
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+public class OrdenadorEventos {
+
+    public static void main(String[] args) throws IOException {
+        List<Evento> eventos = LeitorEventos.lerEventos("caminho/para/arquivo.txt");
+
+        LocalDate hoje = LocalDate.now();
+
+        for (Evento evento : eventos) {
+            long diferencaDias = ChronoUnit.DAYS.between(evento.getData(), hoje);
+            evento.setDiferencaDias(diferencaDias);
+        }
+
+        Collections.sort(eventos, (e1, e2) -> Long.compare(e1.getDiferencaDias(), e2.getDiferencaDias()));
+
+        for (Evento evento : eventos) {
+            System.out.println("Nome do evento: " + evento.getNomeEvento());
+            System.out.println("Data do evento: " + evento.getData());
+            System.out.println("Diferença de dias: " + evento.getDiferencaDias());
+            System.out.println();
+        }
+    }
+
+}
+
+Recomendação:
+
+A escolha da melhor abordagem depende de alguns fatores:
+
+Tamanho do conjunto de dados: Se você espera ter um grande número de eventos, a opção de criar arquivos individuais pode ser mais eficiente.
+Frequência de consultas: Se você precisa realizar consultas frequentes em seus eventos, armazená-los em um único arquivo pode ser mais prático.
+Complexidade das consultas: Se você precisa realizar consultas complexas que abrangem vários eventos, a opção de um único arquivo pode ser mais adequada.
+Exemplos práticos:
+
+Exemplo de código para ler um único arquivo com eventos:
+Java
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LeitorEventos {
+
+    public static List<Evento> lerEventos(String caminhoArquivo) throws IOException {
+        List<Evento> eventos = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(caminhoArquivo)))) {
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                String[] dadosEvento = linha.split(",");
+                Evento evento = new Evento(dadosEvento[0], dadosEvento[1], dadosEvento[2], dadosEvento[3], dadosEvento[4], dadosEvento[5]);
+                eventos.add(evento);
+            }
+        }
+
+        return eventos;
+    }
+
+}

@@ -1,5 +1,6 @@
-[Nome,Categoria,Endereço,Horário,Descrição]
-0,Evento de contas,TI,São paulo,17:00,um evento bem legal,
-1,Evento de php,TI,São paulo,17:00,um evento bem legal,
-2,Evento de ruby,TI,São paulo,17:00,um evento bem legal,
-3,Evento de javaScript,TI,São paulo,17:00,um evento bem legal,
+[Data, Nome, Categoria, Endereço, Horário, Descrição]
+0,Evento de contas,Finanças,Porto Alegre,17:00,um evento bem legal,10/03/2021,
+1,E vento de php,TI,São paulo,17:00,um evento bem legal,12/04/2026,
+2,Evento cálculo,Engenharia,Porto Alegre,17:00,um evento bem legal,17/07/2023,
+3,Evento de anime,Sem categoria,Porto Alegre,17:00,um evento bem legal,25/12/2024,
+0,Evento especial,Finanças,Porto Alegre,11:00,um evento bem diferente,13/05/2025,

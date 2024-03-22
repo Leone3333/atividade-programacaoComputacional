@@ -13,7 +13,7 @@ public abstract class Usuarios {
         this.senha = senha;
     }
 
-    public abstract void verEventos();
+    public abstract void verEventos();  
     public abstract void participarEvento();
     public abstract void cancelarParticipacao();
     public abstract void login(); //método virtual
