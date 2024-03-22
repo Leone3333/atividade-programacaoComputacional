@@ -6,8 +6,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.nio.file.Path;
@@ -21,7 +26,7 @@ public class Evento implements Comparable<Evento> {
      * implementar método de notificar eventos
      */
 
-    private static Integer idEvento = 0;
+    private String idEvento;
     private String nomeEvento;
     private String categoria;
     private String endereco;
@@ -34,10 +39,12 @@ public class Evento implements Comparable<Evento> {
      * OBS: o nome do arquivo já é eventos.txt você deve escrever o arquivo e a
      * extensão txt
      */
-    private Path caminho = Paths.get(
+    private static Path caminho = Paths.get(
             "C:\\xampp\\htdocs\\unifacs\\progamacaoComputadores\\java\\sistema-eventos\\src\\eventosApp\\textos\\eventos\\eventos.txt");
 
-    public Evento(String nomeEvento, String categoria, String endereco, String horario, String descricao, String data) {
+    public Evento(String idEvento,  String nomeEvento, String categoria, String endereco, String horario, String descricao, String data) {
+        
+        this.idEvento = idEvento;
         this.nomeEvento = nomeEvento;
         this.endereco = endereco;
         this.horario = horario;
@@ -76,6 +83,11 @@ public class Evento implements Comparable<Evento> {
         }
     }
 
+
+    public String getIdEvento(){
+        return idEvento;
+    }
+
     public String getNomeEvento() {
         return nomeEvento;
     }
@@ -99,10 +111,7 @@ public class Evento implements Comparable<Evento> {
     public String getData() {
         return data;
     }
-
-    public static Integer getIdevento() {
-        return idEvento++;
-    }
+  
 
     @Override
     public int compareTo(Evento outroEvento) {
@@ -119,10 +128,10 @@ public class Evento implements Comparable<Evento> {
                 inserir.write(cabecalho);
                 inserir.newLine();
             }
-            ;
+            
 
             List<String> dadosUsuario = Arrays.stream(new Object[] {
-                    Evento.getIdevento(),
+                    evento1.getIdEvento(),
                     evento1.getNomeEvento(),
                     evento1.getCategoria(),
                     evento1.getEndereco(),
@@ -137,6 +146,7 @@ public class Evento implements Comparable<Evento> {
                 inserir.write(linha);
                 inserir.write(",");
             }
+            dadosUsuario.sort(null);
 
             inserir.newLine();
             // long tamanho = Files.size(caminho);
@@ -190,13 +200,56 @@ public class Evento implements Comparable<Evento> {
             System.out.println("Erro ao ler o arquivo");
         }
     }
-    
+
     // NÃO CONSIGO FAZERrRRRRRRRRRrrRRrrrrrR
-    private void lerEOrdenarEventos() throws IOException
-    {
+    public void lerEOrdenarEventos() throws IOException {
     }
 
+    private static Evento converterLinhaEmEvento(String linha) {
+        // Parse a linha e configure as propriedades do evento
+        String[] dados = linha.split(";"); // Separador de campos
+        
+        if (linha.startsWith("[Data, Nome, Categoria, Endereço, Horário, Descrição]")) {
+            return null;
+        }
+    
+        String idEvento = dados[0];
+        String nomeEvento = dados[1];
+        String categoria = dados[2];
+        String endereco = dados[3];
+        String horario = dados[4];
+        String descricao = dados[5];
+        String data = dados[6];
 
+        System.out.println("Arquivo convertido");
+        return new Evento(idEvento, nomeEvento, categoria, endereco, horario, descricao, data);
+    }
 
+    public static void notificarEventos() throws IOException, ParseException {
+      
+            Date dataAtual = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+            List<String> eventosStrings = Files.readAllLines(caminho);
+            List<Evento> eventos = new ArrayList<>();
+            
+
+            for (String linha : eventosStrings) {
+                System.out.println(eventosStrings);
+                Evento evento = converterLinhaEmEvento(linha);
+                eventos.add(evento);
+            }
+
+            for (Evento evento : eventos) {
+                Date dataEvento = sdf.parse(evento.getData());
+                if (dataEvento.equals(dataAtual)) {
+                    System.out.println("Evento " + evento.getNomeEvento() + " é hoje!!");
+                }else{
+                    System.out.println("O evento " + evento.getNomeEvento() +  " não é hoje");
+                }   
+            }
+
+        
+    }
 
 }
