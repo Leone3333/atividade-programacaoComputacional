@@ -15,38 +15,25 @@ public class Testes {
          Evento evento3 = new Evento("2", "Evento cálculo", "Engenharia", "Porto Alegre", "17:00", "um evento bem legal", "02/07/2023");
          Evento evento4 = new Evento("3", "Evento de anime", "anime", "Porto Alegre", "17:00", "um evento bem legal", "23/08/2024");
  
-         // Deletar evento com id
-         // evento1.deletEvento(0);
- 
-         // Ler eventos disponiveis
-        //  evento1.lerEventos();
-        
-        try {
-            evento1.creatEvento(evento1);
-            // System.out.println(evento1.getNomeEvento() + " criado com sucesso");
-            
-            evento2.creatEvento(evento2);
-            // System.out.println(evento2.getNomeEvento() + " criado com sucesso");
-            
-            evento3.creatEvento(evento3);
-            // System.out.println(evento3.getNomeEvento() + " criado com sucesso");
-            
-            evento4.creatEvento(evento4);
-            // System.out.println(evento4.getNomeEvento() + " criado com sucesso");
-            
-        } catch (Exception e) {
-            e.getMessage();
-            System.out.println("Erro ao criar evento");
-         }
-         Evento.notificarEventos();
+         
+         //  Ler eventos disponiveis
+         limparConsole();
+         Evento.lerTodosEventos();
+         
+         //  Deletar evento com id
+          Evento.deletEvento("0");
+          Evento.deletEvento("1");
+          System.out.println("\n");
+          Evento.lerTodosEventos();
+          Evento.limparArquivo();
         }
-        
-        /**
-         * IDEIA PARA RESOLVER A QUESTÃO DA CLASSE ABASTRATA E MÉTODOS VIRTUAIS, CRIAR
-      * UM ADMIN QUE PODE ACESSAR CONFIGURAÇÕES ESPECIFICAS
-      * E UM USUARIO COMUN QUE SÓ PODE VER OUTRAS
-      * 
-      */
 
+
+        
+        public static void limparConsole() {
+            // Sequência ANSI para limpar o console
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+        }
     }
 

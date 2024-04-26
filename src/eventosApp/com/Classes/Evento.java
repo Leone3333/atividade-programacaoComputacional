@@ -1,6 +1,7 @@
 package eventosApp.com.Classes;
 
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.nio.file.Path;
 
-public class Evento implements Comparable<Evento> {
+public class Evento {
 
     /**
      * implementar método de ver eventos -- COMPLETO
@@ -40,10 +41,11 @@ public class Evento implements Comparable<Evento> {
      * extensão txt
      */
     private static Path caminho = Paths.get(
-            "C:\\xampp\\htdocs\\unifacs\\progamacaoComputadores\\java\\sistema-eventos\\src\\eventosApp\\textos\\eventos\\eventos.txt");
+            "C:\\laragon\\www\\unifacs\\progamacaoComputadores\\java\\sistema-eventos\\src\\eventosApp\\textos\\eventos\\eventos.txt");
 
-    public Evento(String idEvento,  String nomeEvento, String categoria, String endereco, String horario, String descricao, String data) {
-        
+    public Evento(String idEvento, String nomeEvento, String categoria, String endereco, String horario,
+            String descricao, String data) {
+
         this.idEvento = idEvento;
         this.nomeEvento = nomeEvento;
         this.endereco = endereco;
@@ -53,38 +55,29 @@ public class Evento implements Comparable<Evento> {
 
         switch (categoria) {
             case "TI":
-                this.categoria = categoria;
-                break;
-
             case "Engenharia":
-                this.categoria = categoria;
-                break;
-
             case "Finanças":
-                this.categoria = categoria;
-                break;
-
             case "Saúde":
-                this.categoria = categoria;
-                break;
-
             case "Pesquisa cientifica":
-                this.categoria = categoria;
-                break;
-
             case "Educação":
                 this.categoria = categoria;
                 break;
 
             default:
-                System.out.println("SEM CATEGORIA");
                 this.categoria = "Sem categoria";
                 break;
+
         }
+        try {
+            // Chama o método creatEvento passando o próprio objeto evento
+            creatEvento(this);
+        } catch (IOException e) {
+            System.out.println("Erro na criação do evento");
+        }
+
     }
 
-
-    public String getIdEvento(){
+    public String getIdEvento() {
         return idEvento;
     }
 
@@ -111,14 +104,8 @@ public class Evento implements Comparable<Evento> {
     public String getData() {
         return data;
     }
-  
 
-    @Override
-    public int compareTo(Evento outroEvento) {
-        return LocalDate.parse(this.data).compareTo(LocalDate.parse(outroEvento.getData()));
-    }
-
-    public void creatEvento(Evento evento1) throws IOException {
+    public static void creatEvento(Evento evento) throws IOException {
 
         try (BufferedWriter inserir = Files.newBufferedWriter(caminho, StandardCharsets.UTF_8,
                 StandardOpenOption.APPEND)) {
@@ -128,26 +115,25 @@ public class Evento implements Comparable<Evento> {
                 inserir.write(cabecalho);
                 inserir.newLine();
             }
-            
 
             List<String> dadosUsuario = Arrays.stream(new Object[] {
-                    evento1.getIdEvento(),
-                    evento1.getNomeEvento(),
-                    evento1.getCategoria(),
-                    evento1.getEndereco(),
-                    evento1.getHorario(),
-                    evento1.getDescricao(),
-                    evento1.getData(),
+                    evento.getIdEvento(),
+                    evento.getNomeEvento(),
+                    evento.getCategoria(),
+                    evento.getEndereco(),
+                    evento.getHorario(),
+                    evento.getDescricao(),
+                    evento.getData(),
             })
                     .map(String::valueOf)
                     .collect(Collectors.toList());
 
             for (String linha : dadosUsuario) {
                 inserir.write(linha);
-                inserir.write(",");
+                inserir.write(", ");
             }
-            dadosUsuario.sort(null);
 
+            System.out.println("Evento criado com sucesso!");
             inserir.newLine();
             // long tamanho = Files.size(caminho);
             // System.out.println("Tamanho do arquivo "+ tamanho);
@@ -158,7 +144,7 @@ public class Evento implements Comparable<Evento> {
 
     }
 
-    public void lerEventos() throws IOException {
+    public static void lerTodosEventos() throws IOException {
         try {
             List<String> eventos = Files.readAllLines(caminho);
 
@@ -171,18 +157,18 @@ public class Evento implements Comparable<Evento> {
         }
     }
 
-    public void deletEvento(Integer idEvento) {
+    public static void deletEvento(String idEvento) {
         try {
             List<String> eventos = Files.readAllLines(caminho);
             int indice = -1;
 
-            for (int i = 0; i < eventos.size(); i++) {
+            for (int i = 1; i < eventos.size(); i++) {
                 String[] partes = eventos.get(i).split(",");
-                if (partes[0].equals(String.valueOf(idEvento))) {
+                if (partes[0].equals(idEvento)) {
                     indice = i;
                     break;
                 }
-            }
+            }   
 
             if (indice != -1) {
                 eventos.remove(indice);
@@ -199,57 +185,16 @@ public class Evento implements Comparable<Evento> {
         } catch (Exception e) {
             System.out.println("Erro ao ler o arquivo");
         }
-    }
 
-    // NÃO CONSIGO FAZERrRRRRRRRRRrrRRrrrrrR
-    public void lerEOrdenarEventos() throws IOException {
     }
-
-    private static Evento converterLinhaEmEvento(String linha) {
-        // Parse a linha e configure as propriedades do evento
-        String[] dados = linha.split(";"); // Separador de campos
-        
-        if (linha.startsWith("[Data, Nome, Categoria, Endereço, Horário, Descrição]")) {
-            return null;
+    public static void limparArquivo(){
+        try (BufferedWriter limpar = Files.newBufferedWriter(caminho)){
+            limpar.write("");
+        } catch (Exception e) {
+            System.out.println("Erro ao ler o arquivo");
         }
+        System.out.println("Arquivo limpo com sucesso");
+
+    }
     
-        String idEvento = dados[0];
-        String nomeEvento = dados[1];
-        String categoria = dados[2];
-        String endereco = dados[3];
-        String horario = dados[4];
-        String descricao = dados[5];
-        String data = dados[6];
-
-        System.out.println("Arquivo convertido");
-        return new Evento(idEvento, nomeEvento, categoria, endereco, horario, descricao, data);
-    }
-
-    public static void notificarEventos() throws IOException, ParseException {
-      
-            Date dataAtual = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-            List<String> eventosStrings = Files.readAllLines(caminho);
-            List<Evento> eventos = new ArrayList<>();
-            
-
-            for (String linha : eventosStrings) {
-                System.out.println(eventosStrings);
-                Evento evento = converterLinhaEmEvento(linha);
-                eventos.add(evento);
-            }
-
-            for (Evento evento : eventos) {
-                Date dataEvento = sdf.parse(evento.getData());
-                if (dataEvento.equals(dataAtual)) {
-                    System.out.println("Evento " + evento.getNomeEvento() + " é hoje!!");
-                }else{
-                    System.out.println("O evento " + evento.getNomeEvento() +  " não é hoje");
-                }   
-            }
-
-        
-    }
-
 }
