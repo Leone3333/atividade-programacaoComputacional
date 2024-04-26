@@ -24,8 +24,10 @@ public class Testes {
           Evento.deletEvento("0");
           Evento.deletEvento("1");
           System.out.println("\n");
+          Evento.updateEvento("3", "Evento atualizado", "anime", "Porto alegre", "17:00", "Descriação atualizada", "20/01/2023");
           Evento.lerTodosEventos();
-          Evento.limparArquivo();
+
+        // Evento.limparArquivo();
         }
 
 

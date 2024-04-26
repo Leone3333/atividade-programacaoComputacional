@@ -168,7 +168,7 @@ public class Evento {
                     indice = i;
                     break;
                 }
-            }   
+            }
 
             if (indice != -1) {
                 eventos.remove(indice);
@@ -187,8 +187,41 @@ public class Evento {
         }
 
     }
-    public static void limparArquivo(){
-        try (BufferedWriter limpar = Files.newBufferedWriter(caminho)){
+
+    public static void updateEvento(String idEvento, String nomeEvento, String categoria, String endereco,
+            String horario,
+            String descricao, String data) {
+        try {
+            List<String> eventos = Files.readAllLines(caminho);
+            String eventoUpdate = "";
+            int indice = -1;
+            for (int i = 0; i < eventos.size(); i++) {
+                String[] partes = eventos.get(i).split(",");
+                if (partes[0].equals(idEvento)) {
+                    indice = i;
+                    break;
+                }
+            }
+
+            if (indice != -1) {
+                eventos.set(indice, idEvento + ", " + nomeEvento + ", " + categoria + ", " + endereco + ", " + horario + ", " + descricao + ", " + data);
+                try (BufferedWriter escritor = Files.newBufferedWriter(caminho)) {
+                    for (String evento : eventos) {
+                        escritor.write(evento + System.lineSeparator());
+                    }
+                }
+                System.out.println("Evento " + idEvento + " deletado com sucesso!");
+            } else {
+                System.out.println("Evento " + idEvento + " não encontrado!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao ler o arquivo");
+        }
+    }
+
+    public static void limparArquivo() {
+        try (BufferedWriter limpar = Files.newBufferedWriter(caminho)) {
             limpar.write("");
         } catch (Exception e) {
             System.out.println("Erro ao ler o arquivo");
@@ -196,5 +229,5 @@ public class Evento {
         System.out.println("Arquivo limpo com sucesso");
 
     }
-    
+
 }
